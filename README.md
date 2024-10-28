@@ -108,9 +108,3 @@ The model's behavior improves over time, leading to more coordinated actions bet
 ### License
 This project is licensed under the MIT License.
 
-### Key Points to Customize:
-- Replace `your-username` in the GitHub link with your actual username if hosting on GitHub.
-- Add more detailed results or graphs in the `Results` section if available.
-- Modify the installation instructions if there are additional steps specific to your setup.
-
-This README should give users a clear idea of what the project does, how to set it up, and how to use 
