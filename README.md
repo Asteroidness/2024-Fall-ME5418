@@ -91,10 +91,10 @@ The `CustomPPO` class extends the default PPO from stable-baselines3. It introdu
 class CustomPPO(PPO):
     def custom_loss(self, policy_loss, value_loss, entropy_loss):
         return policy_loss + 0.5 * value_loss - 0.01 * entropy_loss
+```
 
 ### JointActionSpaceWrapper
 The `JointActionSpaceWrapper` combines the actions and observations of all agents into joint spaces so that the PPO model can treat the multi-agent system as a single-agent problem:
-```
 
 ```python
 class JointActionSpaceWrapper(gym.Env):
