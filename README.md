@@ -26,7 +26,7 @@ In this project, we train multiple agents in a simulated warehouse (`rware-tiny-
 
 ## Requirements
 
-- Python 3.8+
+- `Python 3.8+`
 - `stable-baselines3`
 - `gymnasium`
 - `torch`
