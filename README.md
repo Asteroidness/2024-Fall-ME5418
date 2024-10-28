@@ -4,7 +4,7 @@ This repository contains a custom implementation of a Proximal Policy Optimizati
 
 ## Table of Contents
 - [Overview](#overview)
-- [Installation](#installation)
+- [Requirements](#requirements)
 - [Usage](#usage)
   - [Training](#training)
   - [Evaluation](#evaluation)
@@ -24,9 +24,7 @@ In this project, we train multiple agents in a simulated warehouse (`rware-tiny-
 - **Custom PPO Model**: The `CustomPPO` class introduces a custom loss function that balances policy and value learning while encouraging exploration.
 - **Joint Action Space Wrapper**: The `JointActionSpaceWrapper` combines multiple agents' observations and actions into a joint space, allowing PPO to treat the system as a single agent with a composite observation and action space.
 
-## Installation
-
-### Requirements
+## Requirements
 
 - Python 3.8+
 - `stable-baselines3`
@@ -34,32 +32,6 @@ In this project, we train multiple agents in a simulated warehouse (`rware-tiny-
 - `torch`
 - `numpy`
 
-### Steps to Install
-
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/your-username/multi-agent-ppo.git
-    cd multi-agent-ppo
-    ```
-
-2. **Set up a virtual environment**:
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # Linux/Mac
-    # or
-    venv\Scripts\activate  # Windows
-    ```
-
-3. **Install the dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4. **Install the `rware` environment**:
-    You will need to install the `rware` multi-agent warehouse environment. You can follow the installation instructions from the official repository or use:
-    ```bash
-    pip install rware
-    ```
 
 ## Usage
 
