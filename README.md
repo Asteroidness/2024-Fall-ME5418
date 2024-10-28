@@ -73,14 +73,11 @@ During training, the model's performance can be monitored through logs showing m
 
  ```bash
     policy_gradient_loss
-    ```
- ```bash
+
     value_loss
-    ```
- ```bash
+
     entropy_loss
-    ```
- ```bash
+
     explained_variance
     ```
 The model's behavior improves over time, leading to more coordinated actions between agents in the warehouse environment.
