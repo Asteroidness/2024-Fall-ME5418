@@ -67,8 +67,48 @@ In this project, we train multiple agents in a simulated warehouse (`rware-tiny-
     ```bash
     python evaluate.py
     ```
+## Custom Components
 
-### Results
+### MultiAgentFeatureExtractor
+
+The `MultiAgentFeatureExtractor` is a custom feature extractor that processes the observations for each agent in the multi-agent environment. It consists of two fully connected layers:
+
+```python
+class MultiAgentFeatureExtractor(BaseFeaturesExtractor):
+    def __init__(self, observation_space, n_agents, features_dim):
+        self.fc1 = nn.Linear(input_dim_per_agent, 256)
+        self.fc2 = nn.Linear(256, features_dim)
+    def forward(self, observations):
+        x = F.relu(self.fc1(observations))
+        x = self.fc2(x)
+        return x
+
+### CustomPPO
+The `CustomPPO` class extends the default PPO from stable-baselines3. It introduces a custom loss function that balances policy loss, value loss, and entropy loss to encourage both exploitation and exploration:
+
+```python
+class CustomPPO(PPO):
+    def custom_loss(self, policy_loss, value_loss, entropy_loss):
+        return policy_loss + 0.5 * value_loss - 0.01 * entropy_loss
+
+### JointActionSpaceWrapper
+The `JointActionSpaceWrapper` combines the actions and observations of all agents into joint spaces so that the PPO model can treat the multi-agent system as a single-agent problem:
+
+```python
+class JointActionSpaceWrapper(gym.Env):
+    def reset(self):
+        obss = self.env.reset()
+        return np.concatenate(obss)
+    
+    def step(self, actions):
+        split_actions = np.split(actions, self.n_agents)
+        obss, rewards, done, truncated, info = self.env.step(split_actions)
+        joint_obs = np.concatenate(obss)
+        joint_reward = sum(rewards) / self.n_agents
+        joint_done = all(done)
+        return joint_obs, joint_reward, joint_done, info
+
+## Results
 During training, the model's performance can be monitored through logs showing metrics such as:
 
 - `policy_gradient_loss`
@@ -78,6 +118,13 @@ During training, the model's performance can be monitored through logs showing m
 
 The model's behavior improves over time, leading to more coordinated actions between agents in the warehouse environment.
 
-### License
+## Demo Video
+Here’s a demo of the trained multi-agent PPO model in action:
+
+`VIDEO_ID`
+
+This video shows agents coordinating their actions in the warehouse environment after training with the PPO algorithm.
+
+## License
 This project is licensed under the MIT License.
 
