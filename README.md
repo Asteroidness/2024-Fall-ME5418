@@ -107,7 +107,7 @@ class JointActionSpaceWrapper(gym.Env):
         joint_reward = sum(rewards) / self.n_agents
         joint_done = all(done)
         return joint_obs, joint_reward, joint_done, info
-
+        ```
 ## Results
 During training, the model's performance can be monitored through logs showing metrics such as:
 
