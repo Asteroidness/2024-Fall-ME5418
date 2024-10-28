@@ -124,7 +124,7 @@ The model's behavior improves over time, leading to more coordinated actions bet
 ## Demo Video
 Here’s a demo of the trained multi-agent PPO model in action:
 
-`![demo_RL.mkv]`
+`demo_RL.mkv`
 
 This video shows agents coordinating their actions in the warehouse environment after training with the PPO algorithm.
 
