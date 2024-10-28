@@ -71,15 +71,11 @@ In this project, we train multiple agents in a simulated warehouse (`rware-tiny-
 ### Results
 During training, the model's performance can be monitored through logs showing metrics such as:
 
- ```bash
-    policy_gradient_loss
+- `policy_gradient_loss`
+- `value_loss`
+- `entropy_loss`
+- `explained_variance`
 
-    value_loss
-
-    entropy_loss
-
-    explained_variance
-    ```
 The model's behavior improves over time, leading to more coordinated actions between agents in the warehouse environment.
 
 ### License
