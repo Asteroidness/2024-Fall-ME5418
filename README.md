@@ -82,6 +82,7 @@ class MultiAgentFeatureExtractor(BaseFeaturesExtractor):
         x = F.relu(self.fc1(observations))
         x = self.fc2(x)
         return x
+```
 
 ### CustomPPO
 The `CustomPPO` class extends the default PPO from stable-baselines3. It introduces a custom loss function that balances policy loss, value loss, and entropy loss to encourage both exploitation and exploration:
@@ -93,6 +94,7 @@ class CustomPPO(PPO):
 
 ### JointActionSpaceWrapper
 The `JointActionSpaceWrapper` combines the actions and observations of all agents into joint spaces so that the PPO model can treat the multi-agent system as a single-agent problem:
+```
 
 ```python
 class JointActionSpaceWrapper(gym.Env):
@@ -107,7 +109,8 @@ class JointActionSpaceWrapper(gym.Env):
         joint_reward = sum(rewards) / self.n_agents
         joint_done = all(done)
         return joint_obs, joint_reward, joint_done, info
-        ```
+```
+
 ## Results
 During training, the model's performance can be monitored through logs showing metrics such as:
 
