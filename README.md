@@ -89,6 +89,30 @@ The `CustomPPO` class extends the default PPO from stable-baselines3. It introdu
 
 ```python
 class CustomPPO(PPO):
+    def train(self):
+        for rollout_data in self.rollout_buffer.get(self.batch_size):
+
+            observations = rollout_data.observations
+            actions = rollout_data.actions
+            old_log_prob = rollout_data.old_log_prob 
+            advantages = rollout_data.advantages
+            returns = rollout_data.returns
+
+            values, log_probs, entropy = self.policy.forward(observations)
+
+            ratio = torch.exp(log_probs - old_log_prob)
+            surr1 = ratio * advantages
+            surr2 = torch.clamp(ratio, 1 - self.clip_range(1.0), 1 + self.clip_range(1.0)) * advantages
+            policy_loss = -torch.min(surr1, surr2).mean()
+
+            value_loss = F.mse_loss(returns.unsqueeze(-1).expand_as(values), values)
+            entropy_loss = -entropy.mean()
+            custom_loss = self.custom_loss(policy_loss, value_loss, entropy_loss)
+
+            self.optimizer.zero_grad()
+            custom_loss.backward()
+            self.optimizer.step()
+
     def custom_loss(self, policy_loss, value_loss, entropy_loss):
         return policy_loss + 0.5 * value_loss - 0.01 * entropy_loss
 ```
