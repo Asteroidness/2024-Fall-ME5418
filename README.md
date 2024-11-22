@@ -1,78 +1,41 @@
-# Multi-Agent Reinforcement Learning with PPO
-
-This repository contains a custom implementation of a Proximal Policy Optimization (PPO) model for multi-agent reinforcement learning using the `rware` warehouse environment. It includes a custom feature extractor, joint action space wrapper, and a modified PPO training algorithm to handle multi-agent cooperation.
-
-## Table of Contents
-- [Overview](#overview)
-- [Requirements](#requirements)
-- [Usage](#usage)
-  - [Training](#training)
-  - [Evaluation](#evaluation)
-- [Custom Components](#custom-components)
-  - [MultiAgentFeatureExtractor](#multiagentfeatureextractor)
-  - [CustomPPO](#customppo)
-  - [JointActionSpaceWrapper](#jointactionspacewrapper)
-- [Results](#results)
-- [License](#license)
+# RWARE Project
 
 ## Overview
+This project is an implementation of a reinforcement learning agent using the Multi-Robot Warehouse (RWARE) environment. The agent is designed to solve tasks involving the coordination of multiple robots in a simulated warehouse environment. The implemented method uses Proximal Policy Optimization (PPO) with custom feature extraction, joint action space wrapper, and learning rate scheduling to handle the complex interactions within this multi-agent setting.
 
-In this project, we train multiple agents in a simulated warehouse (`rware-tiny-2ag-v2` environment) to coordinate their actions using the PPO algorithm. The main goal is to optimize the agents' cooperation for completing tasks such as moving and delivering goods.
-
-### Features:
-- **Custom Feature Extraction**: The `MultiAgentFeatureExtractor` processes each agent's observations and feeds a unified representation into the PPO model.
-- **Custom PPO Model**: The `CustomPPO` class introduces a custom loss function that balances policy and value learning while encouraging exploration.
-- **Joint Action Space Wrapper**: The `JointActionSpaceWrapper` combines multiple agents' observations and actions into a joint space, allowing PPO to treat the system as a single agent with a composite observation and action space.
+## Files
+- `RWARE_Final.ipynb`: Jupyter Notebook containing the final implementation, including the setup, training, and evaluation of the reinforcement learning agents.
+- `environment.yml`: The Conda environment file listing all the necessary dependencies and versions for this project.
 
 ## Requirements
+To run the project, you need to install all the required packages listed in the `environment.yml` file. These include packages for machine learning (e.g., `torch`), environment simulation (e.g., `gymnasium`), and visualization (e.g., `matplotlib`).
 
-- `Python 3.8+`
-- `stable-baselines3`
-- `gymnasium`
-- `torch`
-- `numpy`
+## Setting Up the Environment
+1. Clone the repository to your local machine.
+2. Use Conda to create the environment with the following command:
+   ```
+   conda env create -f environment.yml
+   ```
+3. Activate the environment:
+   ```
+   conda activate rware_env
+   ```
 
+## Running the Project
+Open the Jupyter Notebook (`RWARE_Final.ipynb`) in your preferred editor (e.g., Jupyter Lab or Jupyter Notebook) and run the cells sequentially. The notebook will guide you through:
+- Environment setup
+- Training the reinforcement learning agent
+- Evaluation and visualization of the results
 
-## Usage
+## Key Features
+- **Multi-Agent PPO:** Implementation of a decentralized Proximal Policy Optimization algorithm for controlling multiple robots.
+- **Custom Feature Extractor:** A tailored feature extractor designed for the RWARE environment, allowing the agents to effectively process the state observations.
+- **Joint Action Space Wrapper:** A wrapper to combine multiple agents' observations and actions into joint spaces so that the PPO model can treat the multi-agent system as a single-agent problem.
+- **Learning Rate Scheduler:** Integrated ReduceLROnPlateau scheduler to improve training stability by adjusting the learning rate dynamically.
 
-### Training
-
-1. **Run the training script**:
-    The script initializes the custom PPO model and trains it using joint observations and actions from the multi-agent warehouse environment.
-
-    ```bash
-    python train.py
-    ```
-
-    The model will be saved after training completes.
-
-2. **Model Configuration**:
-    In the script, the PPO model is initialized with custom features and architecture. You can adjust the following parameters in `train.py` to experiment with different architectures:
-    - `features_extractor_class`
-    - `policy_kwargs`
-    - `total_timesteps`
-
-### Evaluation
-
-1. **Load the trained model**:
-    To evaluate the trained model, you can load it from the saved file:
-
-    ```bash
-    model = PPO.load("ppo_multi_agent_coordinated")
-    ```
-
-2. **Run the evaluation loop**:
-    The script includes a loop to step through the environment and render the agents' behavior using the trained policy. You can visualize the agents in the warehouse environment as they interact and cooperate.
-
-    ```bash
-    python evaluate.py
-    ```
 ## Custom Components
-
 ### MultiAgentFeatureExtractor
-
-The `MultiAgentFeatureExtractor` is a custom feature extractor that processes the observations for each agent in the multi-agent environment. It consists of two fully connected layers:
-
+The `MultiAgentFeatureExtractor` processes each agent's observations and feeds a unified representation into the PPO model. It consists of two fully connected layers:
 ```python
 class MultiAgentFeatureExtractor(BaseFeaturesExtractor):
     def __init__(self, observation_space, n_agents, features_dim):
@@ -86,12 +49,10 @@ class MultiAgentFeatureExtractor(BaseFeaturesExtractor):
 
 ### CustomPPO
 The `CustomPPO` class extends the default PPO from stable-baselines3. It introduces a custom loss function that balances policy loss, value loss, and entropy loss to encourage both exploitation and exploration:
-
 ```python
 class CustomPPO(PPO):
     def train(self):
         for rollout_data in self.rollout_buffer.get(self.batch_size):
-
             observations = rollout_data.observations
             actions = rollout_data.actions
             old_log_prob = rollout_data.old_log_prob 
@@ -119,7 +80,6 @@ class CustomPPO(PPO):
 
 ### JointActionSpaceWrapper
 The `JointActionSpaceWrapper` combines the actions and observations of all agents into joint spaces so that the PPO model can treat the multi-agent system as a single-agent problem:
-
 ```python
 class JointActionSpaceWrapper(gym.Env):
     def reset(self):
@@ -136,21 +96,23 @@ class JointActionSpaceWrapper(gym.Env):
 ```
 
 ## Results
-During training, the model's performance can be monitored through logs showing metrics such as:
+The trained agents showed some capacity for task execution, but overall performance was inconsistent, with fluctuating rewards and instability in training metrics such as value and policy loss.
 
-- `policy_gradient_loss`
-- `value_loss`
-- `entropy_loss`
-- `explained_variance`
+### Visualizations
+- **Learning Rate Schedule**: The learning rate was dynamically adjusted during training using the ReduceLROnPlateau scheduler. The figure below shows the decay in the learning rate over training steps.
+- **Training Losses**: The policy loss, value loss, and entropy loss were tracked over training. The figures below illustrate the instability observed during training.
+- **Cumulative Rewards**: The cumulative rewards collected by agents were monitored across episodes, as shown in the figure below. Despite some positive trends, the rewards showed high variance and frequent dips, indicating unstable learning.
 
-The model's behavior improves over time, leading to more coordinated actions between agents in the warehouse environment.
+## Future Work
+- **Reward Shaping**: Improve reward shaping to encourage better coordination between robots, such as intermediate rewards for partial task completions or reducing collisions.
+- **Network Redesign**: Introduce more advanced neural architectures like Graph Neural Networks (GNNs) or transformer-based models to handle inter-agent relationships effectively.
+- **Debugging Tools**: Fix environment rendering issues and add tools for real-time debugging to better understand agent behavior during training.
+- **Communication Mechanisms**: Allow robots to exchange limited information to improve coordination and task efficiency.
+- **Scalability Testing**: Begin with fewer robots and simpler tasks to ensure a stable foundation before scaling up the complexity of the environment.
 
-## Demo Video
-Here’s a demo of the trained multi-agent PPO model in action:
-
-`demo_RL.mkv`
-
-This video shows agents coordinating their actions in the warehouse environment after training with the PPO algorithm.
+## References
+- **RWARE Environment**: A multi-robot warehouse environment designed for reinforcement learning research.
+- **Stable Baselines3**: A library providing implementations of popular RL algorithms, used here for the PPO implementation.
 
 ## License
 This project is licensed under the MIT License.
